@@ -392,7 +392,6 @@ function GraphView({ arxivId }: { arxivId: string }) {
   const [, navigate] = useLocation();
   const [filter, setFilter] = useState<"all" | "references" | "citing">("all");
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [dims, setDims] = useState({
     w: window.innerWidth,
     h: window.innerHeight - 88,
@@ -473,8 +472,8 @@ function GraphView({ arxivId }: { arxivId: string }) {
   );
 
   const nodes = useMemo(
-    () => baseNodes.map((n) => ({ ...n, isHovered: n.id === hoveredId })),
-    [baseNodes, hoveredId]
+    () => baseNodes.map((n) => ({ ...n, isHovered: false })),
+    [baseNodes]
   );
 
   // init/restart simulation when graph changes
@@ -835,7 +834,7 @@ function GraphView({ arxivId }: { arxivId: string }) {
             colors={COLORS}
             highlightDocumentIds={[centerId]}
             selectedNodeId={selectedId}
-            onNodeHover={setHoveredId}
+            onNodeHover={() => {}}
             onNodeClick={handleNodeClick}
             onNodeDragStart={() => {}}
             onNodeDragEnd={() => {}}
