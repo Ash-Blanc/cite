@@ -1,0 +1,10 @@
+{
+  "buildCommand": "bun install --frozen-lockfile && bun run build",
+  "outputDirectory": "dist",
+  "installCommand": "bun install --frozen-lockfile",
+  "framework": null,
+  "rewrites": [
+    { "source": "/api/:path*", "destination": "/api/index" },
+    { "source": "/((?!api).*)", "destination": "/index.html" }
+  ]
+}
