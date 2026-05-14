@@ -196,23 +196,23 @@ export default function Index() {
 // ─── landing page ─────────────────────────────────────────────────────────────
 
 const EXAMPLES = [
-  { id: "1706.03762", label: "Attention Is All You Need" },
-  { id: "1810.04805", label: "BERT" },
-  { id: "2005.14165", label: "GPT-3" },
-  { id: "2503.15798", label: "MoLE (MoE with Lookup Tables)" },
-  { id: "2302.13971", label: "LLaMA" },
+  { id: "1706.03762", label: "Attention Is All You Need", color: "#6366f1" },
+  { id: "1810.04805", label: "BERT", color: "#818cf8" },
+  { id: "2005.14165", label: "GPT-3", color: "#fb923c" },
+  { id: "2503.15798", label: "MoLE", color: "#34d399" },
+  { id: "2302.13971", label: "LLaMA", color: "#60a5fa" },
 ];
 
 function LandingPage() {
   const [, navigate] = useLocation();
   const [input, setInput] = useState("");
   const [error, setError] = useState("");
+  const [focused, setFocused] = useState(false);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     const id = input.trim();
     if (!id) { setError("Enter an arXiv ID"); return; }
-    // strip full URL prefix if pasted
     const cleaned = id
       .replace(/^https?:\/\/arxiv\.org\/(abs|pdf)\//, "")
       .replace(/v\d+$/, "")
@@ -228,161 +228,329 @@ function LandingPage() {
       style={{
         height: "100vh",
         width: "100vw",
-        background: "#0a0a0f",
+        background: "#05050e",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
         fontFamily: "'Inter', sans-serif",
+        position: "relative",
+        overflow: "hidden",
       }}
     >
-      {/* header */}
-      <div style={{ textAlign: "center", marginBottom: "48px" }}>
-        <div
-          style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontSize: "11px",
-            color: "#6366f1",
-            letterSpacing: "0.12em",
-            textTransform: "uppercase",
-            marginBottom: "12px",
-          }}
-        >
-          Citation Graph Explorer
-        </div>
-        <div
-          style={{
-            fontSize: "36px",
-            fontWeight: 700,
-            color: "#e2e8f0",
-            lineHeight: 1.2,
-            marginBottom: "12px",
-          }}
-        >
-          Explore any arXiv paper
-        </div>
-        <div
-          style={{
-            fontSize: "15px",
-            color: "#64748b",
-            maxWidth: "480px",
-          }}
-        >
-          Enter an arXiv ID to visualize its citation network — what it cites
-          and what cites it.
-        </div>
-      </div>
-
-      {/* input */}
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          display: "flex",
-          gap: "8px",
-          width: "100%",
-          maxWidth: "480px",
-          padding: "0 16px",
-          boxSizing: "border-box",
-        }}
-      >
-        <input
-          autoFocus
-          value={input}
-          onChange={(e) => { setInput(e.target.value); setError(""); }}
-          placeholder="e.g. 1706.03762 or arxiv.org/abs/1706.03762"
-          style={{
-            flex: 1,
-            background: "#111118",
-            border: `1px solid ${error ? "#ef4444" : "#1e1e2e"}`,
-            borderRadius: "8px",
-            padding: "12px 16px",
-            fontSize: "16px",
-            color: "#e2e8f0",
-            fontFamily: "'IBM Plex Mono', monospace",
-            outline: "none",
-          }}
-        />
-        <button
-          type="submit"
-          style={{
-            background: "#6366f1",
-            border: "none",
-            borderRadius: "8px",
-            padding: "12px 20px",
-            fontSize: "14px",
-            fontWeight: 600,
-            color: "#fff",
-            cursor: "pointer",
-            whiteSpace: "nowrap",
-          }}
-        >
-          Explore →
-        </button>
-      </form>
-
-      {error && (
-        <div
-          style={{
-            marginTop: "8px",
-            fontSize: "12px",
-            color: "#ef4444",
-            fontFamily: "'IBM Plex Mono', monospace",
-          }}
-        >
-          {error}
-        </div>
-      )}
-
-      {/* examples */}
+      {/* ── aurora blob 1 — indigo ── */}
       <div
         style={{
-          marginTop: "32px",
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "8px",
-          justifyContent: "center",
-          maxWidth: "560px",
-          padding: "0 16px",
+          position: "absolute",
+          top: "15%",
+          left: "20%",
+          width: "500px",
+          height: "500px",
+          borderRadius: "50%",
+          background: "radial-gradient(circle at center, #6366f155 0%, #6366f120 50%, transparent 70%)",
+          filter: "blur(60px)",
+          animation: "aurora-1 14s ease-in-out infinite",
+          pointerEvents: "none",
         }}
-      >
+      />
+      {/* ── aurora blob 2 — orange ── */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: "10%",
+          right: "15%",
+          width: "420px",
+          height: "420px",
+          borderRadius: "50%",
+          background: "radial-gradient(circle at center, #fb923c40 0%, #fb923c15 50%, transparent 70%)",
+          filter: "blur(70px)",
+          animation: "aurora-2 18s ease-in-out infinite",
+          pointerEvents: "none",
+        }}
+      />
+      {/* ── aurora blob 3 — emerald ── */}
+      <div
+        style={{
+          position: "absolute",
+          top: "55%",
+          left: "5%",
+          width: "360px",
+          height: "360px",
+          borderRadius: "50%",
+          background: "radial-gradient(circle at center, #34d39930 0%, #34d39910 50%, transparent 70%)",
+          filter: "blur(80px)",
+          animation: "aurora-3 22s ease-in-out infinite",
+          pointerEvents: "none",
+        }}
+      />
+      {/* ── subtle grid overlay ── */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          backgroundImage: `
+            linear-gradient(rgba(99,102,241,0.04) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(99,102,241,0.04) 1px, transparent 1px)
+          `,
+          backgroundSize: "60px 60px",
+          pointerEvents: "none",
+        }}
+      />
+      {/* ── radial vignette to darken edges ── */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background: "radial-gradient(ellipse at center, transparent 30%, #05050e 100%)",
+          pointerEvents: "none",
+        }}
+      />
+
+      {/* ── content ── */}
+      <div style={{ position: "relative", zIndex: 1, width: "100%", display: "flex", flexDirection: "column", alignItems: "center" }}>
+
+        {/* header */}
         <div
+          style={{ textAlign: "center", marginBottom: "48px", animation: "fade-in-up 0.7s ease both" }}
+        >
+          <div
+            style={{
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontSize: "11px",
+              letterSpacing: "0.18em",
+              textTransform: "uppercase",
+              marginBottom: "16px",
+              background: "linear-gradient(90deg, #6366f1, #818cf8, #c084fc, #6366f1)",
+              backgroundSize: "300% auto",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+              animation: "shimmer 5s linear infinite",
+              display: "inline-block",
+            }}
+          >
+            Citation Graph Explorer
+          </div>
+          <div
+            style={{
+              fontSize: "clamp(28px, 5vw, 48px)",
+              fontWeight: 800,
+              lineHeight: 1.15,
+              marginBottom: "16px",
+              letterSpacing: "-0.02em",
+            }}
+            className="glow-text"
+          >
+            Explore any arXiv paper
+          </div>
+          <div
+            style={{
+              fontSize: "15px",
+              color: "#64748b",
+              maxWidth: "400px",
+              lineHeight: 1.6,
+            }}
+          >
+            Visualize the citation network — what it cites and what cites it.
+          </div>
+        </div>
+
+        {/* input */}
+        <form
+          onSubmit={handleSubmit}
           style={{
+            display: "flex",
+            gap: "8px",
             width: "100%",
-            textAlign: "center",
-            fontSize: "11px",
-            color: "#475569",
-            fontFamily: "'IBM Plex Mono', monospace",
-            marginBottom: "4px",
-            textTransform: "uppercase",
-            letterSpacing: "0.06em",
+            maxWidth: "520px",
+            padding: "0 16px",
+            boxSizing: "border-box",
+            animation: "fade-in-up 0.7s ease 0.15s both",
           }}
         >
-          Try an example
-        </div>
-        {EXAMPLES.map((ex) => (
-          <button
-            key={ex.id}
-            onClick={() => navigate(`/?id=${ex.id}`)}
+          {/* glowing input wrapper */}
+          <div
             style={{
-              background: "#111118",
-              border: "1px solid #1e1e2e",
-              borderRadius: "6px",
-              padding: "6px 12px",
-              fontSize: "11px",
-              color: "#94a3b8",
-              cursor: "pointer",
-              fontFamily: "'IBM Plex Mono', monospace",
-              transition: "border-color 0.15s",
-              touchAction: "manipulation",
+              flex: 1,
+              position: "relative",
+              borderRadius: "10px",
             }}
-            onMouseEnter={(e) => ((e.target as HTMLButtonElement).style.borderColor = "#6366f1")}
-            onMouseLeave={(e) => ((e.target as HTMLButtonElement).style.borderColor = "#1e1e2e")}
           >
-            {ex.id} · {ex.label}
+            {/* animated glow border when focused */}
+            {focused && (
+              <div
+                style={{
+                  position: "absolute",
+                  inset: "-2px",
+                  borderRadius: "12px",
+                  background: "linear-gradient(90deg, #6366f1, #818cf8, #c084fc, #6366f1)",
+                  backgroundSize: "300% auto",
+                  animation: "rainbow-border 2s linear infinite",
+                  zIndex: 0,
+                  opacity: 0.8,
+                }}
+              />
+            )}
+            <input
+              autoFocus
+              value={input}
+              onChange={(e) => { setInput(e.target.value); setError(""); }}
+              onFocus={() => setFocused(true)}
+              onBlur={() => setFocused(false)}
+              placeholder="e.g. 1706.03762 or arxiv.org/abs/1706.03762"
+              style={{
+                width: "100%",
+                background: "#0d0d18",
+                border: `1px solid ${error ? "#ef4444" : focused ? "transparent" : "#1e1e2e"}`,
+                borderRadius: "10px",
+                padding: "14px 16px",
+                fontSize: "15px",
+                color: "#e2e8f0",
+                fontFamily: "'IBM Plex Mono', monospace",
+                outline: "none",
+                boxSizing: "border-box",
+                position: "relative",
+                zIndex: 1,
+              }}
+            />
+          </div>
+          <button
+            type="submit"
+            style={{
+              borderRadius: "10px",
+              padding: "14px 22px",
+              fontSize: "14px",
+              fontWeight: 700,
+              color: "#fff",
+              cursor: "pointer",
+              whiteSpace: "nowrap",
+              border: "none",
+              background: "linear-gradient(135deg, #6366f1 0%, #818cf8 50%, #6366f1 100%)",
+              backgroundSize: "200% auto",
+              animation: "shimmer 3s linear infinite",
+              boxShadow: "0 0 20px #6366f150, 0 4px 15px rgba(0,0,0,0.4)",
+              transition: "transform 0.1s, box-shadow 0.2s",
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.transform = "translateY(-1px)";
+              (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 0 32px #6366f170, 0 6px 20px rgba(0,0,0,0.5)";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.transform = "translateY(0)";
+              (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 0 20px #6366f150, 0 4px 15px rgba(0,0,0,0.4)";
+            }}
+          >
+            Explore →
           </button>
-        ))}
+        </form>
+
+        {error && (
+          <div
+            style={{
+              marginTop: "8px",
+              fontSize: "12px",
+              color: "#ef4444",
+              fontFamily: "'IBM Plex Mono', monospace",
+              animation: "fade-in-up 0.2s ease both",
+            }}
+          >
+            {error}
+          </div>
+        )}
+
+        {/* examples */}
+        <div
+          style={{
+            marginTop: "36px",
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "8px",
+            justifyContent: "center",
+            maxWidth: "560px",
+            padding: "0 16px",
+            animation: "fade-in-up 0.7s ease 0.3s both",
+          }}
+        >
+          <div
+            style={{
+              width: "100%",
+              textAlign: "center",
+              fontSize: "10px",
+              color: "#334155",
+              fontFamily: "'IBM Plex Mono', monospace",
+              marginBottom: "6px",
+              textTransform: "uppercase",
+              letterSpacing: "0.1em",
+            }}
+          >
+            Try an example
+          </div>
+          {EXAMPLES.map((ex) => (
+            <ExamplePill key={ex.id} ex={ex} onClick={() => navigate(`/?id=${ex.id}`)} />
+          ))}
+        </div>
+
+        {/* bottom node count hint */}
+        <div
+          style={{
+            marginTop: "48px",
+            display: "flex",
+            alignItems: "center",
+            gap: "20px",
+            animation: "fade-in-up 0.7s ease 0.45s both",
+            opacity: 0.5,
+          }}
+        >
+          {[
+            { color: "#6366f1", label: "center" },
+            { color: "#fb923c", label: "references" },
+            { color: "#34d399", label: "citations" },
+          ].map(({ color, label }) => (
+            <div key={label} style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+              <div style={{
+                width: "8px", height: "8px", borderRadius: "50%",
+                background: color, boxShadow: `0 0 8px ${color}`,
+              }} />
+              <span style={{ fontSize: "10px", color: "#475569", fontFamily: "'IBM Plex Mono', monospace" }}>
+                {label}
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
+  );
+}
+
+function ExamplePill({
+  ex,
+  onClick,
+}: {
+  ex: { id: string; label: string; color: string };
+  onClick: () => void;
+}) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <button
+      onClick={onClick}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        background: hovered ? `${ex.color}12` : "#0d0d18",
+        border: `1px solid ${hovered ? ex.color + "80" : "#1e1e2e"}`,
+        borderRadius: "6px",
+        padding: "7px 14px",
+        fontSize: "11px",
+        color: hovered ? ex.color : "#64748b",
+        cursor: "pointer",
+        fontFamily: "'IBM Plex Mono', monospace",
+        transition: "all 0.18s ease",
+        touchAction: "manipulation",
+        boxShadow: hovered ? `0 0 12px ${ex.color}30` : "none",
+      }}
+    >
+      {ex.id} · {ex.label}
+    </button>
   );
 }
 
@@ -671,17 +839,32 @@ function GraphView({ arxivId }: { arxivId: string }) {
       <div
         style={{
           padding: "10px 20px",
-          borderBottom: "1px solid #1e1e2e",
+          borderBottom: "none",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
           flexWrap: "wrap",
           flexShrink: 0,
-          background: "#0d0d15",
+          background: "linear-gradient(180deg, #0f0f1a 0%, #0d0d15 100%)",
           minHeight: "56px",
           boxSizing: "border-box",
+          position: "relative",
         }}
       >
+        {/* animated rainbow bottom border */}
+        <div
+          style={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: "1px",
+            background: "linear-gradient(90deg, #6366f1, #818cf8, #c084fc, #fb923c, #34d399, #60a5fa, #6366f1)",
+            backgroundSize: "300% auto",
+            animation: "rainbow-border 4s linear infinite",
+            opacity: 0.6,
+          }}
+        />
         {/* back + title */}
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
           <button
@@ -843,6 +1026,30 @@ function GraphView({ arxivId }: { arxivId: string }) {
             viewportRef={viewportRef}
             variant="console"
           />
+          {/* vignette overlay — pointer-events:none so graph stays interactive */}
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              background: "radial-gradient(ellipse at center, transparent 40%, #05050e 100%)",
+              pointerEvents: "none",
+              zIndex: 1,
+              opacity: 0.55,
+            }}
+          />
+          {/* subtle top fade */}
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              height: "60px",
+              background: "linear-gradient(to bottom, #0a0a0f80, transparent)",
+              pointerEvents: "none",
+              zIndex: 1,
+            }}
+          />
         </div>
 
         {selectedPaper && (
@@ -933,25 +1140,34 @@ function SidePanel({
         overflow: "hidden",
         fontFamily: "'Inter', sans-serif",
         zIndex: 100,
-        boxShadow: "0 -4px 40px rgba(0,0,0,0.6)",
+        boxShadow: "0 -4px 40px rgba(0,0,0,0.7), 0 -1px 0 " + borderColor + "40",
       }
     : {
         width: "360px",
         flexShrink: 0,
         background: "#0d0d15",
-        borderLeft: "1px solid #1e1e2e",
+        borderLeft: "1px solid #1a1a28",
         display: "flex",
         flexDirection: "column",
         overflow: "hidden",
         fontFamily: "'Inter', sans-serif",
+        boxShadow: "-4px 0 40px rgba(0,0,0,0.5)",
       };
 
   return (
     <div style={panelStyle}>
+      {/* gradient top accent bar */}
+      <div
+        style={{
+          height: "3px",
+          background: `linear-gradient(90deg, ${borderColor}00 0%, ${borderColor} 40%, ${borderColor}80 70%, ${borderColor}00 100%)`,
+          flexShrink: 0,
+        }}
+      />
       {/* panel header */}
       <div
         style={{
-          padding: "16px 16px 12px",
+          padding: "14px 16px 12px",
           borderBottom: "1px solid #1e1e2e",
           display: "flex",
           alignItems: "flex-start",
@@ -1125,14 +1341,17 @@ function SidePanel({
                       key={i}
                       style={{
                         padding: "10px 12px",
-                        background: "#111118",
-                        border: `1px solid ${paper.relation === "reference" ? "#fb923c30" : "#34d39930"}`,
+                        background: paper.relation === "reference"
+                          ? "linear-gradient(135deg, #fb923c08, #111118)"
+                          : "linear-gradient(135deg, #34d39908, #111118)",
+                        border: `1px solid ${paper.relation === "reference" ? "#fb923c25" : "#34d39925"}`,
                         borderLeft: `3px solid ${paper.relation === "reference" ? "#fb923c" : "#34d399"}`,
                         borderRadius: "0 6px 6px 0",
                         fontSize: "11px",
                         color: "#cbd5e1",
                         lineHeight: 1.6,
                         fontStyle: "italic",
+                        boxShadow: `inset 0 0 20px ${paper.relation === "reference" ? "#fb923c08" : "#34d39908"}`,
                       }}
                     >
                       "…{ctx.length > 240 ? ctx.slice(0, 240) + "…" : ctx}…"
@@ -1212,16 +1431,42 @@ function FullscreenMessage({ children }: { children: React.ReactNode }) {
 
 function LoadingSpinner() {
   return (
-    <div
-      style={{
-        width: "32px",
-        height: "32px",
-        border: "2px solid #1e1e2e",
-        borderTop: "2px solid #6366f1",
-        borderRadius: "50%",
-        animation: "spin 0.8s linear infinite",
-      }}
-    />
+    <div style={{ position: "relative", width: "64px", height: "64px" }}>
+      {/* outer ring */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          border: "1px solid #1e1e2e",
+          borderTop: "1px solid #6366f1",
+          borderRadius: "50%",
+          animation: "spin 1.6s linear infinite",
+        }}
+      />
+      {/* inner ring */}
+      <div
+        style={{
+          position: "absolute",
+          inset: "12px",
+          border: "1px solid #1e1e2e",
+          borderBottom: "1px solid #fb923c",
+          borderRadius: "50%",
+          animation: "spin 1s linear infinite reverse",
+        }}
+      />
+      {/* core dot */}
+      <div
+        style={{
+          position: "absolute",
+          inset: "28px",
+          background: "#6366f1",
+          borderRadius: "50%",
+          boxShadow: "0 0 12px #6366f1",
+          animation: "pulse-glow 2s ease-in-out infinite",
+          color: "#6366f1",
+        }}
+      />
+    </div>
   );
 }
 
@@ -1309,21 +1554,26 @@ function FilterPill({
   active: boolean;
   onClick: () => void;
 }) {
+  const [hovered, setHovered] = useState(false);
+  const on = active || hovered;
   return (
     <button
       onClick={onClick}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       style={{
-        background: active ? `${color}18` : "#111118",
-        border: `1px solid ${active ? color : "#1e1e2e"}`,
+        background: on ? `${color}15` : "#0d0d18",
+        border: `1px solid ${on ? color + "90" : "#1e1e2e"}`,
         borderRadius: "6px",
         padding: "4px 12px",
         cursor: "pointer",
         display: "flex",
         alignItems: "center",
         gap: "6px",
-        transition: "all 0.15s",
+        transition: "all 0.18s ease",
         minHeight: "44px",
         touchAction: "manipulation",
+        boxShadow: active ? `0 0 14px ${color}40, inset 0 0 10px ${color}10` : "none",
       }}
     >
       <span
@@ -1331,7 +1581,8 @@ function FilterPill({
           fontFamily: "'IBM Plex Mono', monospace",
           fontSize: "14px",
           fontWeight: 700,
-          color,
+          color: on ? color : "#64748b",
+          transition: "color 0.18s",
         }}
       >
         {value}
@@ -1339,8 +1590,9 @@ function FilterPill({
       <span
         style={{
           fontSize: "11px",
-          color: "#94a3b8",
+          color: on ? "#94a3b8" : "#475569",
           fontFamily: "'IBM Plex Mono', monospace",
+          transition: "color 0.18s",
         }}
       >
         {label}
